@@ -1,0 +1,241 @@
+<html>
+<head>
+   <title>Test</title>
+   <script src="web3.min.js"></script>
+</head>
+<body>
+    <h2>Transfer</h2>
+   <p>ADDRESS<input id="add"type="text"/></p>
+   <p>Amount<input id="amt" type="number"/></p>
+   <button  onclick="tran()">Transfer</button>
+   <h2>Mint</h2>
+   <p>Mint Amount<input id="mamt" type="number"/></p>
+   <button  onclick="mmint()">Mint</button>
+   <h2>Approval</h2>
+    <p>Spender Address:<input id="aaccno" type="text"></p>
+    <p>Amount:<input id="aamount" type="number"></p>
+    <button id="app" onclick="appr()">Approval</button>
+   <h2>Allowance</h2>
+    <p>Owner Address:<input id="Oaccno" type="text"></p>
+    <p>Spender Address:<input id="saccno" type="text"></p>
+    <button id="all" onclick="allow()">Allowance</button>
+   <h2>TransferFrom</h2>
+    <p>From Account No:<input id="faccno" type="text"></p>
+    <p>To Account No:<input id="taccno" type="text"></p>
+    <p>Amount:<input id="famount" type="number"></p>
+    <button onclick="tf()">TransferFrom</button> 
+   <button onclick="bal()">Balance</button>
+   <pre id="hashresult"></pre>
+ </body>
+ <script>
+       web3.eth.defaultAccount = web3.eth.accounts[0];
+        var test = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "mint",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"name": "_spender",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "remaining",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+    ]);
+    var min=test.at('0x4c02422891e33064e1b6099326704f0a7d024418');
+    var acc=document.getElementById('add');
+    var amount=document.getElementById('amt');
+    var mamount=document.getElementById('mamt');
+    var result=document.getElementById('hashresult');
+    var aamt=document.getElementById('aamount');
+    var aacc=document.getElementById('aaccno');
+    var sacc=document.getElementById('Oaccno');
+    var pacc=document.getElementById('saccno');
+    var facc=document.getElementById('faccno');
+    var tacc=document.getElementById('taccno');
+    var famt=document.getElementById('famount');
+    function tran(){
+        
+        return min.transfer(acc.value,Number(amount.value),function(err,res){
+                if (!err) {
+                    result.innerText = res;
+                }
+                else{
+                  result.innerText = "Error";
+                }
+              });
+      }
+    function mmint()
+    {
+        return min.mint(Number(mamount.value),function(err,res){
+            if(!err){
+              result.innerText = res;
+            }
+            else{
+              result.innerText = res;
+            }
+          });
+    }
+    function appr(){
+        
+        return min.approve(aacc.value,Number(aamt.value),function(err,res){
+                if (!err) {
+                    result.innerText = res;
+                }
+                else{
+                  result.innerText = "Error";
+                }
+              });
+      }
+     function allow(){
+        
+        return min.allowance(sacc.value,pacc.value,function(err,res){
+                if (!err) {
+                    result.innerText = res;
+                }
+                else{
+                  result.innerText = "Error";
+                }
+              });
+      }
+      function bal(){ 
+             return min.balanceOf(function(err,res){
+                if (!err) {
+                    result.innerText = res;
+                }
+                else{
+                  result.innerText = "Error";
+                }
+              });
+      }
+      function tf(){
+        
+        return min.transferFrom(facc.value,tacc.value,Number(famt.value),function(err,res){
+                if (!err) {
+                    result.innerText = res;
+                }
+                else{
+                  result.innerText = "Error";
+                }
+              });
+      }
+    </script>
+</html>
